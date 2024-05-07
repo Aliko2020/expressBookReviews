@@ -28,9 +28,19 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop 
 // TEST http://localhost:5000 
-public_users.get('/',function (req, res) {
-  res.send(JSON.stringify(books))
+// public_users.get('/',function (req, res) {
+//   res.send(JSON.stringify(books))
+// });
+public_users.get('/', async (req, res) => {
+  try {
+    const bookList = JSON.stringify(books);
+    res.send(bookList);
+  } catch (error) {
+    console.error("Error fetching book list:", error);
+    return res.status(500).json({ message: "Error fetching book list" });
+  }
 });
+
 
 // Get book details based on ISBN
 // Search for the book with the specified ISBN
@@ -81,9 +91,18 @@ public_users.get('/title/:title',function (req, res) {
 });
 
 //  Get book review
-public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+public_users.get('/review/:isbn', function (req, res) {
+  // Extract ISBN from request parameters
+  const isbn = req.params.isbn;
+
+  // Implement logic to fetch and return book review for the specified ISBN
+  const bookReview = books.getBookReviewByISBN(isbn); // Assuming a function getBookReviewByISBN() is defined in booksdb.js to fetch book review by ISBN
+
+  if (bookReview) {
+    return res.status(200).json({ review: bookReview });
+  } else {
+    return res.status(404).json({ message: "Review for this book not found" });
+  }
 });
 
 module.exports.general = public_users;
