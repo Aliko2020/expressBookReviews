@@ -88,7 +88,7 @@ regd_users.post("/login", (req, res) => {
     const token = jwt.sign({ username: username }, "your_secret_key");
 
     // Return the token as a response
-    return res.status(200).json({ token: token });
+    return res.status(200).json(`You are Successfully login as ${username}`);
 });
 
 

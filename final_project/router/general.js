@@ -6,6 +6,7 @@ let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
 
+//Registering a new user
 public_users.post("/register", (req,res) => {
   //getting user data from request body
   const { username, email, password } = req.body;
@@ -26,6 +27,7 @@ public_users.post("/register", (req,res) => {
   return res.status(200).json({ message: "User registered successfully" });
 });
 
+
 // Get the book list available in the shop 
 // TEST http://localhost:5000 
 // public_users.get('/',function (req, res) {
@@ -45,7 +47,7 @@ public_users.get('/', async (req, res) => {
 // Get book details based on ISBN
 // Search for the book with the specified ISBN
 // Note Test with /isbn<ISBN> eg GET http://localhost:5000/isbn74832746
-public_users.get('/isbn:isbn',function (req, res) {
+public_users.get('/isbn/:isbn',function (req, res) {
   const requestedISBN = req.params.isbn;
   
   const book = Object.values(books).find((b) => b.ISBN === requestedISBN);
@@ -90,19 +92,14 @@ public_users.get('/title/:title',function (req, res) {
   }
 });
 
-//  Get book review
+//  Get book based on review
 public_users.get('/review/:isbn', function (req, res) {
-  // Extract ISBN from request parameters
-  const isbn = req.params.isbn;
+  //
+  const requested_review = req.params.isbn
+  
+  const filtered_review = Object.values(books).find((r)=> r.reviews === requested_review)
 
-  // Implement logic to fetch and return book review for the specified ISBN
-  const bookReview = books.getBookReviewByISBN(isbn); // Assuming a function getBookReviewByISBN() is defined in booksdb.js to fetch book review by ISBN
-
-  if (bookReview) {
-    return res.status(200).json({ review: bookReview });
-  } else {
-    return res.status(404).json({ message: "Review for this book not found" });
-  }
+  res.send(filtered_review)
 });
 
 module.exports.general = public_users;
