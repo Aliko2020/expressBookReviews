@@ -6,15 +6,30 @@ const public_users = express.Router();
 
 
 public_users.post("/register", (req,res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  //getting user data from request body
+  const { username, email, password } = req.body;
+
+  // Check if required fields are provided
+  if (!username || !email || !password) {
+    return res.status(400).json({ message: "Username, email, and password are required" });
+  }
+  
+  // Check if the username is already taken
+  if (users.some(user => user.username === username)) {
+    return res.status(400).json({ message: "Username already exists" });
+  }
+
+  // Save the user data to the database
+  const newUser = { username, email, password: password };
+  users.push(newUser);
+
+  return res.status(200).json({ message: "User registered successfully" });
 });
 
 // Get the book list available in the shop 
 // TEST http://localhost:5000 
 public_users.get('/',function (req, res) {
   res.send(JSON.stringify(books))
-  return res.status(300).json({message: "Yet to be implemented amos"});
 });
 
 // Get book details based on ISBN
@@ -39,7 +54,6 @@ public_users.get('/isbn:isbn',function (req, res) {
 // Test on http://localhost:5000/author/Jane Austen
 public_users.get('/author/:author',function (req, res) {
   const requestedAuthor = req.params.author;
-  
   const author = Object.values(books).find((a) => a.author === requestedAuthor);
   if (author) {
     // author found
