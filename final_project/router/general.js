@@ -10,16 +10,29 @@ public_users.post("/register", (req,res) => {
   return res.status(300).json({message: "Yet to be implemented"});
 });
 
-// Get the book list available in the shop
+// Get the book list available in the shop 
+// TEST http://localhost:5000 
 public_users.get('/',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  res.send(JSON.stringify(books))
+  return res.status(300).json({message: "Yet to be implemented amos"});
 });
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+// Search for the book with the specified ISBN
+// Note Test with /isbn<ISBN> eg GET http://localhost:5000/isbn74832746
+public_users.get('/isbn:isbn',function (req, res) {
+  const requestedISBN = req.params.isbn;
+  
+  const book = Object.values(books).find((b) => b.ISBN === requestedISBN);
+
+  if (book) {
+    // Book found
+    return res.status(200).json(book);
+  } else {
+    // Book not found
+    return res.status(404).json({ message: "Book not found" });
+  }
+
  });
   
 // Get book details based on author
