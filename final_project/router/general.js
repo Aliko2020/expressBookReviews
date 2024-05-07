@@ -1,5 +1,6 @@
 const express = require('express');
 let books = require("./booksdb.js");
+const axios = require('axios')
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
@@ -13,7 +14,6 @@ public_users.post("/register", (req,res) => {
   if (!username || !email || !password) {
     return res.status(400).json({ message: "Username, email, and password are required" });
   }
-  
   // Check if the username is already taken
   if (users.some(user => user.username === username)) {
     return res.status(400).json({ message: "Username already exists" });
