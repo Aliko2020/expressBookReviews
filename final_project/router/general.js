@@ -36,15 +36,34 @@ public_users.get('/isbn:isbn',function (req, res) {
  });
   
 // Get book details based on author
+// Test on http://localhost:5000/author/Jane Austen
 public_users.get('/author/:author',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const requestedAuthor = req.params.author;
+  
+  const author = Object.values(books).find((a) => a.author === requestedAuthor);
+  if (author) {
+    // author found
+    return res.status(200).json(author);
+  } else {
+    // author not found
+    return res.status(404).json({ message: "author not found" });
+  }
+
 });
 
 // Get all books based on title
+// TEST eg http://localhost:5000/title/The Epic Of Gilgamesh
 public_users.get('/title/:title',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const requested_based_title = req.params.title;
+  
+  const title = Object.values(books).find((t) => t.title === requested_based_title);
+  if (title) {
+    // book found
+    return res.status(200).json(title);
+  } else {
+    // book not found
+    return res.status(404).json({ message: "book not found" });
+  }
 });
 
 //  Get book review
